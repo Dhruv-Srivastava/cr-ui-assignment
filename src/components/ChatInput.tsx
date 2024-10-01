@@ -1,15 +1,28 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { Send, Paperclip, Camera } from "lucide-react";
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  Camera,
+  FileText,
+  Paperclip,
+  SendHorizonal,
+  Video,
+} from "lucide-react";
+import OptionsModal from "./OptionsModal";
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
+export default function ChatInput({ onSendMessage }: ChatInputProps) {
   const [message, setMessage] = useState("");
+  const [showAttachmentOptions, setShowAttachmentOptions] = useState(false);
 
-  const handleSend = () => {
+  function toggleShowAttachmentOptions() {
+    setShowAttachmentOptions((prev) => !prev);
+  }
+
+  const handleSend = (e) => {
+    e.preventDefault();
     if (message.trim()) {
       onSendMessage(message);
       setMessage("");
@@ -17,28 +30,45 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
   };
 
   return (
-    <motion.div
+    <motion.form
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex items-center space-x-2 p-4 bg-white border-t border-gray-200"
+      className="relative bg-white rounded-lg shadow-sm"
+      onSubmit={handleSend}
     >
-      <Paperclip className="w-6 h-6 text-gray-500" />
-      <input
-        type="text"
+      <textarea
+        rows={1}
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        className="flex-1 p-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-        placeholder="Type a message..."
+        className="w-[80%] px-3 py-4 bg-white rounded-lg outline-none resize-none no-scrollbar h-fit"
+        placeholder="Reply to @Rohit Yadav"
       />
-      <Camera className="w-6 h-6 text-gray-500" />
-      <button
-        onClick={handleSend}
-        className="bg-blue-500 text-white rounded-full p-2"
-      >
-        <Send className="w-5 h-5" />
-      </button>
-    </motion.div>
-  );
-};
+      <div className="absolute top-0 bottom-0 right-3 m-auto flex gap-4 items-center">
+        <div className="relative">
+          <button type="button" onClick={toggleShowAttachmentOptions}>
+            <Paperclip className="w-6 h-6 text-[#141E0D]" />
+          </button>
+          <AnimatePresence>
+            {showAttachmentOptions && (
+              <OptionsModal className="max-w-32 bg-[#008000] p-3 rounded-full flex justify-center items-center gap-4 text-white -top-16 -left-11 z-50">
+                <button>
+                  <Camera size={20} />
+                </button>
+                <button>
+                  <Video size={20} />
+                </button>
+                <button>
+                  <FileText size={20} />
+                </button>
+              </OptionsModal>
+            )}
+          </AnimatePresence>
+        </div>
 
-export default ChatInput;
+        <button>
+          <SendHorizonal className="w-6 h-6 text-[#141E0D]" />
+        </button>
+      </div>
+    </motion.form>
+  );
+}

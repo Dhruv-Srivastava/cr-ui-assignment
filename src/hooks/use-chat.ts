@@ -1,9 +1,7 @@
-// src/hooks/useChats.ts
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { ChatMessage } from "../types/chat";
 
-const fetchChats = async (page: number): Promise<ChatMessage[]> => {
-  // This is a mock API call. Replace with your actual API endpoint.
+async function fetchChats(page: number): Promise<ChatMessage[]> {
   const response = await fetch(
     `https://qa.corider.in/assignment/chat?page=${page}`
   );
@@ -11,7 +9,7 @@ const fetchChats = async (page: number): Promise<ChatMessage[]> => {
     throw new Error("Network response was not ok");
   }
   return response.json();
-};
+}
 
 export const useChats = () => {
   return useInfiniteQuery({

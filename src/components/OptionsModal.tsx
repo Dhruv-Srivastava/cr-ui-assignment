@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { MessageSquareX, Phone, Users } from "lucide-react";
+import { cn } from "../utils/cn";
 
 const dropdownVariants = {
   hidden: {
@@ -18,27 +18,16 @@ const dropdownVariants = {
   },
 };
 
-export default function OptionsModal({ isOpen }) {
+export default function OptionsModal({ children, className }) {
   return (
     <motion.div
-      className={`w-40 max-w-40 h-fit absolute top-full right-0 bg-white shadow-md rounded-lg p-3 z-50`}
+      className={cn("absolute", className)}
       variants={dropdownVariants}
       initial="hidden"
-      animate={isOpen ? "visible" : "hidden"}
+      animate="visible"
       exit="hidden"
     >
-      <button className="flex items-center gap-3 text-[#141E0D] py-3.5">
-        <Users size={20} />
-        <span className="text-sm font-semibold">Members</span>
-      </button>
-      <button className="flex items-center gap-3 text-[#141E0D] py-3.5">
-        <Phone size={20} />
-        <span className="text-sm font-semibold">Share Number</span>
-      </button>
-      <button className="flex items-center gap-3 text-[#141E0D] py-3.5">
-        <MessageSquareX size={20} />
-        <span className="text-sm font-semibold">Report</span>
-      </button>
+      {children}
     </motion.div>
   );
 }
